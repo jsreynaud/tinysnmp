@@ -1,0 +1,2 @@
+usr/include/tinysnmp/manager/*.h
+usr/lib/libmanager.a

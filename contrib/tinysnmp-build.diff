@@ -1,0 +1,11 @@
+--- /tmp/GdYvJ6nBqN/tinysnmp-0.8.4/rules.mk	2004-07-28 22:56:31.000000000 +0300
++++ /tmp/vKVcLAvHZW/tinysnmp-0.8.4+memmove/rules.mk	2006-09-19 16:47:47.000000000 +0300
+@@ -45,7 +45,7 @@
+ 
+ ifneq ($(DIR),)
+ all::
+-	for F in $(DIR); do $(MAKE) -C $$F all; done
++	for F in $(DIR); do $(MAKE) -C $$F all || exit 2; done
+ endif	# ifneq ($(DIR),)
+ 
+ do-it-all::

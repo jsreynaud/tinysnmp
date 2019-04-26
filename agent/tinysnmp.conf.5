@@ -1,0 +1,204 @@
+.\"
+.\" -*- nroff -*-
+.\"
+.\"  Copyright (c) Abraham vd Merwe <abz@blio.com>
+.\"  All rights reserved.
+.\"
+.\"  Redistribution and use in source and binary forms, with or without
+.\"  modification, are permitted provided that the following conditions
+.\"  are met:
+.\"  1. Redistributions of source code must retain the above copyright
+.\"     notice, this list of conditions and the following disclaimer.
+.\"
+.\"  2. Redistributions in binary form must reproduce the above copyright
+.\"     notice, this list of conditions and the following disclaimer in the
+.\"     documentation and/or other materials provided with the distribution.
+.\"  3. Neither the name of the author nor the names of other contributors
+.\"     may be used to endorse or promote products derived from this software
+.\"     without specific prior written permission.
+.\"
+.\"  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+.\"  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+.\"  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\"  ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\"  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\"  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+.\"  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+.\"  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+.\"  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.\"  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.TH TINYSNMP.CONF 5 "July 2004" Unix "File formats and conventions"
+.SH NAME
+tinysnmp.conf \- TinySNMPd(8) configuration file
+.SH DESCRIPTION
+The TinySNMP agent configuration file consist of a list of Cisco-style
+statements, but may also contain bash-style (hash) comments and whitespace
+which are simply ignored.
+.SH FORMAT
+User name or uid of user as which to run the agent.
+.PP
+.RS
+.B user
+.I (
+<userid>
+.I |
+<username>
+.I )
+.RE
+.PP
+Group name or gid of group as which to run agent.
+.PP
+.RS
+.B group
+.I (
+<groupid>
+.I |
+<groupname>
+.I )
+.RE
+.PP
+The file in which the agent should record its process identification number
+when it starts. This file is only created if the agent is started as a daemon.
+.PP
+.RS
+.B pidfile
+<filename>
+.RE
+.PP
+Address which the server binds to. Only connections arriving at this
+address will be accepted.
+.PP
+.RS
+.B listen
+.I (
+<hostname>
+.I |
+<address>
+.I ) [
+:
+.I (
+<service>
+.I |
+<port>
+.I ) ]
+.RE
+.PP
+Hosts/subnets allowed access to the agent. There may be multiple allow
+statements.
+.PP
+.RS
+.B allow
+.I (
+<hostname>
+.I |
+<address>
+.I |
+<network>
+.I [
+/ <cidr-mask>
+.I ] )
+.RE
+.PP
+Community string which clients must use to connect to the server.
+.PP
+.RS
+.B community
+<community-string>
+.RE
+.PP
+Number of seconds to cache ObjectID's between snmp module updates. This
+statement is optional and if omittted, relevant module update callbacks will
+be called every time a request is made.
+You shouldn't need to ask questions about the configuration file, because
+the configuration file for TinySNMPd is well commented by default.
+.PP
+.RS
+.B cache
+<timeout-in-seconds>
+.RE
+.PP
+Some mib modules may have their own configuration sections. These sections
+all begin with a module statement. More details about specific mib modules
+may be found in the module sections below.
+.PP
+.RS
+.B module
+<module-name>
+.RE
+.PP
+Module sections may be surrounded by conditional statements. This avoid
+parse errors if those modules are not installed.
+.PP
+.RS
+.B ifdef
+<module-name>
+.br
+.I ...
+.br
+.B endif
+.RE
+.SH SYSTEM
+The \fBsystem\fP module require its own section which must contain
+the following statements
+.PP
+Contact person for this managed node, together with information on how to
+contact this person. This will become sysContact.0 in the SNMPv2-MIB.
+.PP
+.RS
+.B contact
+<string>
+.RE
+.PP
+The physical location of this node (e.g., `telephone, closet, 3rd floor').
+This will become sysLocation.0 in the SNMPv2-MIB.
+.PP
+.RS
+.B location
+<string>
+.RE
+.SH UPS
+The \fBups\fP module require its own section which must contain
+the following statements
+.PP
+Specify the hostname of APC UPS Power Management daemon. The default port is
+6543.
+.PP
+Since the module uses non-blocking i/o to communicate to the ups daemon, you
+are strongly encouraged to only specify servers on the same host (preferably
+localhost).
+.PP
+.RS
+.B apcupsd
+.I (
+<hostname>
+.I |
+<address>
+.I ) [
+:
+.I (
+<service>
+.I |
+<port>
+.I ) ]
+.RE
+.PP
+A string identifying the UPS. This will become upsIdentName.0 in the UPS-MIB.
+.PP
+.RS
+.B identifier
+<string>
+.RE
+.PP
+A string identifying the devices attached to the output of the UPS. This
+will become upsIdentAttachedDevices.0 in the UPS-MIB.
+.PP
+.RS
+.B attached
+<string>
+.RE
+.SH SEE ALSO
+tinysnmpd(8), apcupsd(8)
+.SH AUTHOR
+Written by Abraham vd Merwe <abz@blio.com>
+

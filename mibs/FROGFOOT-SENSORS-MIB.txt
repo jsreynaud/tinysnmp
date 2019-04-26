@@ -1,0 +1,332 @@
+FROGFOOT-SENSORS-MIB
+
+-- -*- mib -*-
+
+DEFINITIONS ::= BEGIN
+
+-- Frogfoot Networks CC Sensors MIB
+
+-- This mib provides a generic interface for sensors
+-- found on a host. It is based on the IETF Entity
+-- MIB for physical sensors, but contain various
+-- attributes not found in that MIB.
+
+IMPORTS
+	MODULE-IDENTITY, OBJECT-TYPE, Integer32,
+	TimeTicks, enterprises
+		FROM SNMPv2-SMI
+	TEXTUAL-CONVENTION, DisplayString
+		FROM SNMPv2-TC
+	MODULE-COMPLIANCE, OBJECT-GROUP
+		FROM SNMPv2-CONF;
+
+sensors 	MODULE-IDENTITY
+	LAST-UPDATED "200407280000Z"
+	ORGANIZATION "Frogfoot Networks"
+	CONTACT-INFO
+		"	Abraham van der Merwe
+
+			Postal: Frogfoot Networks CC
+					P.O. Box 23618
+					Claremont
+					Cape Town
+					7735
+					South Africa
+
+			Phone: +27 82 565 4451
+			Email: abz@frogfoot.net"
+	DESCRIPTION
+		"The MIB module to describe sensors."
+	::= { system 2 }
+
+frogfoot		OBJECT IDENTIFIER ::= { enterprises 10002 }
+servers			OBJECT IDENTIFIER ::= { frogfoot 1 }
+system			OBJECT IDENTIFIER ::= { servers 1 }
+
+senMIB			OBJECT IDENTIFIER ::= { sensors 31 }
+senMIBObjects	OBJECT IDENTIFIER ::= { senMIB 1 }
+senConformance	OBJECT IDENTIFIER ::= { senMIB 2 }
+
+senGroups		OBJECT IDENTIFIER ::= { senConformance 1 }
+senCompliances	OBJECT IDENTIFIER ::= { senConformance 2 }
+
+TableIndex ::= TEXTUAL-CONVENTION
+	DISPLAY-HINT	"d"
+	STATUS			current
+	DESCRIPTION
+		"A unique value, greater than zero. It is recommended
+		that values are assigned contiguously starting from 1."
+	SYNTAX			Integer32 (1..2147483647)
+
+SensorDataType ::= TEXTUAL-CONVENTION
+	STATUS			current
+	DESCRIPTION
+		"An object using this data type represents the data
+		type associated with one or more sensor values."
+	SYNTAX			INTEGER {
+						unknown(1),		-- unknown measurement, or arbitrary, relative numbers
+						other(2),		-- a measure other than those listed below
+						voltsAC(3),		-- electric potential
+						voltsDC(4),		-- electric potential
+						amperes(5),		-- electric current
+						watts(6),		-- power
+						hertz(7),		-- frequency
+						celsius(8),		-- temperature
+						percentRH(9),	-- percent relative humidity
+						rpm(10),		-- shaft revolutions per minute
+						cmm(11),		-- cubic meters per minute (airflow)
+						farad(12),		-- capacitance
+						ohm(13),		-- resistance
+						truthValue(14)	-- value takes { true(1), false(2) }
+					}
+
+SensorDataScale ::= TEXTUAL-CONVENTION
+	STATUS			current
+	DESCRIPTION
+		"An object using this data type represents a data scaling
+		factor, represented with an International System of Units
+		(SI) prefix. The actual data units are determined by
+		examining an object of this type together with the
+		associated SensorType object."
+	SYNTAX			INTEGER {
+						yocto(1),   -- 10^-24
+						zepto(2),   -- 10^-21
+						atto(3),    -- 10^-18
+						femto(4),   -- 10^-15
+						pico(5),    -- 10^-12
+						nano(6),    -- 10^-9
+						micro(7),   -- 10^-6
+						milli(8),   -- 10^-3
+						units(9),   -- 10^0
+						kilo(10),   -- 10^3
+						mega(11),   -- 10^6
+						giga(12),   -- 10^9
+						tera(13),   -- 10^12
+						exa(14),    -- 10^15
+						peta(15),   -- 10^18
+						zetta(16),  -- 10^21
+						yotta(17)   -- 10^24
+					}
+
+SensorDataValue ::= TEXTUAL-CONVENTION
+	DISPLAY-HINT	"d"
+	STATUS			current
+	DESCRIPTION
+		"An object using this data type represents a sensor
+		value. Objects of this type SHOULD be defined together
+		with objects of type SensorType and SensorScale.
+		Associated objects of these types are used to identify
+		the semantics of one or more objects of type
+		SensorValue."
+	SYNTAX			Integer32 (-1000000000..1000000000)
+
+SensorDataStatus ::= TEXTUAL-CONVENTION
+	STATUS			current
+	DESCRIPTION
+		"An object using this data type represents the
+		operational status of a physical sensor.
+		
+		The value 'ok(1)' indicates that the agent can obtain
+		the sensor value.
+		
+		The value 'unavailable(2)' indicates that the agent
+		presently cannot obtain the sensor value.
+		
+		The value 'nonoperational(3)' indicates that the agent
+		believes the sensor is broken.  The sensor could have a hard
+		failure (disconnected wire), or a soft failure such as out-
+		of-range, jittery, or wildly fluctuating readings."
+	SYNTAX			INTEGER {
+						ok(1),
+						unavailable(2),
+						nonoperational(3)
+					}
+
+--
+-- Sensor Table
+--
+
+sensorNumber	OBJECT-TYPE
+	SYNTAX			Integer32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The number of sensors stored in the sensors table."
+	::= { sensors 1 }
+
+sensorTable		OBJECT-TYPE
+	SYNTAX			SEQUENCE OF SensorEntry
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"Sensor information."
+	::= { sensors 2 }
+
+sensorEntry		OBJECT-TYPE
+	SYNTAX			SensorEntry
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"An entry containing sensor information."
+	INDEX { sensorIndex }
+	::= { sensorTable 1 }
+
+SensorEntry ::=
+	SEQUENCE {
+		sensorIndex			TableIndex,
+		sensorDescr			DisplayString,
+		sensorType			SensorDataType,
+		sensorScale			SensorDataScale,
+		sensorCurrent		SensorDataValue,
+		sensorMinimum		SensorDataValue,
+		sensorMaximum		SensorDataValue,
+		sensorHysteresis	SensorDataValue,
+		sensorStatus		SensorDataStatus,
+		sensorLastUpdated	TimeTicks
+	}
+
+sensorIndex		OBJECT-TYPE
+	SYNTAX			TableIndex
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"A unique value, greater than zero, for each sensor."
+	::= { sensorEntry 1 }
+
+sensorDescr		OBJECT-TYPE
+	SYNTAX			DisplayString
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"A textual description of the sensor."
+	::= { sensorEntry 2 }
+
+sensorType		OBJECT-TYPE
+	SYNTAX			SensorDataType
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The type of data returned by the associate sensor
+		values."
+	::= { sensorEntry 3 }
+
+sensorScale		OBJECT-TYPE
+	SYNTAX			SensorDataScale
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The exponent to apply to values returned by the
+		associated sensor values."
+	::= { sensorEntry 4 }
+
+sensorCurrent	OBJECT-TYPE
+	SYNTAX			SensorDataValue
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The most recent measurement obtained by the agent
+		for this sensor."
+	::= { sensorEntry 5 }
+
+sensorMinimum	OBJECT-TYPE
+	SYNTAX			SensorDataValue
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The lower limit of allowed sensor values. If the
+		value of sensorCurrent falls below this value it
+		should be assumed that the monitored device is
+		entering some critical state and may stop functioning."
+	::= { sensorEntry 6 }
+
+sensorMaximum	OBJECT-TYPE
+	SYNTAX			SensorDataValue
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The upper limit of allowed sensor values. If the
+		value of sensorCurrent exceeds this value it
+		should be assumed that the monitored device is
+		entering some critical state and may stop functioning."
+	::= { sensorEntry 7 }
+
+sensorHysteresis OBJECT-TYPE
+	SYNTAX			SensorDataValue
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"Hysteresis value adds to the sensorMinimum value (e.g.
+		if sensorMinimum = 10mV, and sensorHisteresis = 2mV,
+		then actual hysteresis point is 10+2 = 12mV); and
+		subtracts from the sensorMaximum value (e.g. if
+		sensorMaximum = 64mV, and hysteresis = 2mV, then actual
+		hysteresis point is 64-2 = 62mV)."
+	::= { sensorEntry 8 }
+
+sensorStatus	OBJECT-TYPE
+	SYNTAX			SensorDataStatus
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The operational status of the sensor."
+	::= { sensorEntry 9 }
+
+sensorLastUpdated OBJECT-TYPE
+	SYNTAX			TimeTicks
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The value of sysUpTime at the time the status and/or
+		value of this sensor was last obtained by the agent."
+	::= { sensorEntry 10 }
+
+--
+-- Compliance Statements
+--
+
+senCompliance	MODULE-COMPLIANCE
+	STATUS current
+	DESCRIPTION
+		"The compliance statement for SNMP entities which have
+		sensors."
+	MODULE
+		MANDATORY-GROUPS { reqGroup }
+		GROUP optGroup
+		DESCRIPTION
+			"This group contain all the optional values for each
+			sensor."
+		GROUP reqGroup
+		DESCRIPTION
+			"This group is mandatory for those systems which have
+			any type of sensor."
+	::= { senCompliances 1 }
+
+reqGroup	OBJECT-GROUP
+	OBJECTS {
+		sensorNumber,
+		sensorDescr,
+		sensorType,
+		sensorScale,
+		sensorCurrent,
+		sensorStatus,
+		sensorLastUpdated
+	}
+	STATUS			current
+	DESCRIPTION
+		"A collection of objects providing information specific to
+		sensors."
+	::= { senGroups 1 }
+
+optGroup	OBJECT-GROUP
+	OBJECTS {
+		sensorMinimum,
+		sensorMaximum,
+		sensorHysteresis
+	}
+	STATUS			current
+	DESCRIPTION
+		"A optional collection of objects providing information
+		specific to sensors."
+	::= { senGroups 2 }
+
+END

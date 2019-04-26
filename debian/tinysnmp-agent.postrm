@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+case "$1" in
+	purge|remove)
+		if [ -d /usr/lib/tinysnmp ]
+		then
+			echo 'removing /usr/lib/tinysnmp'
+			rmdir /usr/lib/tinysnmp 2> /dev/null
+		fi
+		;;
+
+	upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+		;;
+
+	*)
+		echo "postrm called with unknown argument \$1'" >&2
+		exit 0
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0
+

@@ -1,0 +1,25 @@
+
+This document isn't really a list of answers to questions that I've been
+asked, but rather a list of answers to questions that I've asked myself from
+time to time.
+
+
+Q: Why doesn't TinySNMPd display interface aliases?
+
+A: In Linux the aliases are just linked to the interface itself. They don't
+have their own counters, so keeping track of them isn't really useful. The
+other problem with keeping track of them is that they don't have unique
+indexes. According to the interfaces MIB all interface indexes should be the
+same for the duration that the agent is running, so I'd have to keep my own
+interface name -> index mapping. Also, what happens if e.g. eth0:0 and
+eth0:1 is configured, then 5 minutes later, you down both interfaces and
+swap them? There is no way to detect this kind of thing.
+
+
+Q: Why does the indexes change for ppp interfaces?
+
+A: By default, the ppp implementation in Linux (and BSD flavours) does
+not have a static mapping from serial ports to their corresponding ppp
+interfaces. You can tell ppp to associate certain ppp devices with
+corresponding serial devices by using the "unit" command.
+

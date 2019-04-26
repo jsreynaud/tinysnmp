@@ -1,0 +1,58 @@
+#!/bin/sh -e
+
+getgid()
+{
+	ifs="$IFS"
+	IFS=':'
+	set - `grep $1 /etc/group 2>/dev/null`
+	IFS="$ifs"
+	echo $3
+}
+
+configure()
+{
+	# make sure that tinysnmp user/group exist
+	if id tinysnmp 2>/dev/null
+	then
+		echo 'user tinysnmp already exist'
+	else
+		echo 'adding user tinysnmp'
+		/usr/sbin/adduser --quiet --system --no-create-home --home /usr/lib/tinysnmp --group tinysnmp
+	fi
+
+	# make sure that /usr/lib/tinysnmp exist and have correct permissions
+	if [ -d /usr/lib/tinysnmp ]
+	then
+		echo 'directory /usr/lib/tinysnmp already exist'
+	else
+		echo 'creating directory /usr/lib/tinysnmp'
+		mkdir /usr/lib/tinysnmp
+	fi
+	echo 'changing ownership of directory /usr/lib/tinysnmp to tinysnmp'
+	chown tinysnmp:tinysnmp /usr/lib/tinysnmp
+
+	# i know this is not the right place to do it, but I forgot to do this
+	# in the postrm script of the previous versions, so this is a workaround
+
+	# remove stale /etc/logrotate.d/tinysnmp-agent
+	rm -f /etc/logrotate.d/tinysnmp-agent
+}
+
+case "$1" in
+	configure)
+		configure
+		;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+		;;
+
+	*)
+		echo "postinst called with unknown argument \$1'" >&2
+		exit 0
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0
+

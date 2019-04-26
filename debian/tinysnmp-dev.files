@@ -1,0 +1,3 @@
+usr/include/tinysnmp/*.h
+usr/share/man/man1/makeoid.1.gz
+usr/bin/makeoid

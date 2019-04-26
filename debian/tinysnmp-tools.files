@@ -1,0 +1,4 @@
+usr/bin/tinysnmpget
+usr/share/man/man1/tinysnmpget.1.gz
+usr/share/man/man1/tinysnmpgetnext.1.gz
+usr/share/man/man1/tinysnmpwalk.1.gz

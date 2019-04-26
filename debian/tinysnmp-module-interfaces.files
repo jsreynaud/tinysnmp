@@ -1,0 +1,3 @@
+usr/lib/tinysnmp/interfaces.so
+usr/share/tinysnmp/mibs/IF-MIB.txt
+usr/share/tinysnmp/mibs/IANAifType-MIB.txt

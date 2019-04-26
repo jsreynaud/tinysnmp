@@ -1,0 +1,163 @@
+.\"
+.\" -*- nroff -*-
+.\"
+.\"  Copyright (c) Abraham vd Merwe <abz@blio.com>
+.\"  All rights reserved.
+.\"
+.\"  Redistribution and use in source and binary forms, with or without
+.\"  modification, are permitted provided that the following conditions
+.\"  are met:
+.\"  1. Redistributions of source code must retain the above copyright
+.\"     notice, this list of conditions and the following disclaimer.
+.\"
+.\"  2. Redistributions in binary form must reproduce the above copyright
+.\"     notice, this list of conditions and the following disclaimer in the
+.\"     documentation and/or other materials provided with the distribution.
+.\"  3. Neither the name of the author nor the names of other contributors
+.\"     may be used to endorse or promote products derived from this software
+.\"     without specific prior written permission.
+.\"
+.\"  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+.\"  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+.\"  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\"  ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\"  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\"  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+.\"  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+.\"  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+.\"  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.\"  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.TH TINYSNMPD 8 "August 2004" Unix "System administration commands"
+.SH NAME
+TinySNMPd \- daemon to respond to SNMP request packets
+.SH SYNOPSIS
+.B tinysnmpd
+.RI [OPTIONS]
+.RI <configfile>
+.RI <modulepath>
+.SH DESCRIPTION
+.B tinysnmpd
+is an SNMP agent which binds to a port and awaits requests from SNMP
+management software. Upon receiving a request, it processes the request(s),
+collects the requested information and returns the information to the
+sender.
+.SH OPTIONS
+A summary of options is included below.
+.TP
+.B \-f | \-\-logfile=FILENAME
+Location of log file. By default, messages will be logged to the console.
+.TP
+.B \-s | \-\-syslog=FACILITY
+The following facilities can be specified:
+.P
+.ds a \tauthpriv\tsecurity/authorization messages
+.ds b \tcron\tclock daemon
+.ds c \tdaemon\tsystem daemons without separate facility
+.ds d \tftp\tftp daemon
+.ds e \tkern\tkernel messages
+.ds f \tlpr\tline printer subsystem
+.ds g \tmail\tmail subsystem
+.ds h \tnews\tusenet news subsystem
+.ds i \tsyslog\tmessages generated internally by syslogd
+.ds j \tuser\tgeneric user-level messages
+.ds k \tuucp\tuucp subsystem
+.ds l \tlocal0\treserved for local use
+.ds m \t\fB...\fP\t
+.ds n \tlocal7
+.ta 1i 2i
+\*[a]
+.br
+\*[b]
+.br
+\*[c]
+.br
+\*[d]
+.br
+\*[e]
+.br
+\*[f]
+.br
+\*[g]
+.br
+\*[h]
+.br
+\*[i]
+.br
+\*[j]
+.br
+\*[k]
+.br
+\*[l]
+.br
+\*[m]
+.br
+\*[n]
+.br
+.IP
+If this option is specified, messages will be logged to syslog. By default,
+messages will be logged to the console.
+.TP
+.B \-l | \-\-loglevel=LEVEL
+The following levels can be specified (in increasing
+order of verbosity):
+.P
+.ds a \tquiet\tNo messages will be logged
+.ds b \terrors\tOnly errors will be logged
+.ds c \twarnings\tWarnings & errors will be logged
+.ds d \tnormal\tDefault messages and all of the above
+.ds e \tverbose\tVerbose messages will also be logged
+.ds f \tdebug\tLog debug messages as well
+.ds g \tnoisy\tNoisy debug messages will be logged as well
+.ta 1i 2i
+\*[a]
+.br
+\*[b]
+.br
+\*[c]
+.br
+\*[d]
+.br
+\*[e]
+.br
+\*[f]
+.br
+\*[g]
+.br
+.IP
+If a log file is specified, TinySNMPd defaults to
+.I verbose
+, otherwise,
+.I noisy
+is selected.
+.TP
+.B \-d | \-\-daemon
+Run in the background. You need to specify a log file if you want to use
+this option.
+.TP
+.B \-h | \-\-help
+Show a help message.
+.TP
+.B <configfile>
+Location of TinySNMPd configuration file.
+.TP
+.B <modulepath>
+Path where mib libraries reside.
+.P
+All of these options can also be found be executing the
+program with the
+.B \-h
+or
+.B \-\-help
+options.
+.SH FILES
+.IP "/etc/tinysnmp.conf"
+.SH SEE ALSO
+tinysnmp.conf(5)
+.SH BUGS
+This agent is far from complete. So far, it only supports SNMPv1 packets
+over UDP (snmp-get, snmp-get-next), no snmp-set's (i.e. you can't change any
+data on the agent), and no traps.
+.SH AUTHOR
+Written by Abraham vd Merwe <abz@blio.com>
+

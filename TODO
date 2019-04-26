@@ -1,0 +1,76 @@
+
+High Priority:
+
+ - sensors mib implementation
+ - wireless extensions support
+ - support for network ups tools (nut)
+
+Medium Priority:
+
+ - smi/mib resolver library
+ - SetRequest, Trap support - SNMPv1 compliance
+ - GetBulkRequest, InformRequest, SNMPv2-Trap support - SNMPv2c compliance
+
+Low Priority:
+
+ - tcp support
+ - SNMPv3 support
+ - SMUX protocol
+ - IP-MIB, TCP-MIB, UDP-MIB support
+ - BER floating point support
+ - more generic BER api (how to do this efficiently?)
+
+ - rearrange agent source:
+ 
+     - merge cmdline, config, agent
+	 - config_parse: (module_open, agent_create, cmdline_parse, agent_parse)
+
+AGENT:
+
+* add support for SNMP views
+* Agent-X protocol
+* snmp proxy
+
+MODULES:
+
+* IF-MIB (what still needs to be done?)
+
+MANAGER
+
+* replace tinysnmpxxx with a single tinysnmp shell:
+
+   set protocol udp
+   set port 161
+   set timeout 5
+   set retries 10
+   set                      # show current settings
+   open sil.frogfoot.net public
+   get ifNumber.0
+   walk ifTable
+   table ifDescr
+   close                    # close current connection
+   status                   # status of current connection
+   quit
+   load [filename]			# load configuration file
+   save [filename]			# save configuration file
+   version                  # show blurb about program
+   help                     # show blurb about commands
+   ...
+
+   must have global/local config file
+
+* implement exponential backoff in manager routines
+
+BER library
+-----------
+
+* BER debugging functions (useful for packet sniffer)
+
+Fix this BER bug:
+./tinysnmpgetnext lindsey public 1.3.6.1.2.1.4.21.1.3.223.255.255.0
+
+SMI library
+-----------
+
+* binary database for resolving oids, display hints, and type checking
+

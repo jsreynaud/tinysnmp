@@ -1,0 +1,8 @@
+etc/tinysnmp.conf
+usr/sbin/tinysnmpd
+usr/share/man/man5/tinysnmp.conf.5.gz
+usr/share/man/man8/tinysnmpd.8.gz
+usr/share/tinysnmp/mibs/SNMPv2-SMI.txt
+usr/share/tinysnmp/mibs/SNMPv2-TC.txt
+usr/share/tinysnmp/mibs/SNMPv2-CONF.txt
+usr/share/tinysnmp/mibs/SNMPv2-MIB.txt

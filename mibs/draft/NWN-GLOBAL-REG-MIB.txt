@@ -1,0 +1,136 @@
+-- -*- mib -*-
+
+--
+--  NWN Object Identifier Registrations
+--
+--  Version 2.0.0
+--
+
+NWN-GLOBAL-REG DEFINITIONS ::= BEGIN
+
+IMPORTS
+	MODULE-IDENTITY, OBJECT-IDENTITY, enterprises
+		FROM SNMPv2-SMI;
+
+
+nwnGlobalRegModule MODULE-IDENTITY
+	LAST-UPDATED	"9905260000Z"
+	ORGANIZATION	"No Wires Needed BV"
+	CONTACT-INFO	"
+		 Name: 		Arnoud Zwemmer
+		 Address:	P.O. Box 343
+		 Zip:		3720 AH
+		 City:		Bilthoven
+		 Country:	The Netherlands
+		 Phone:		+31-30-2296060
+		 Fax:		+31-30-2296061
+		 e-mail:	arnoud@nwn.com"
+	DESCRIPTION
+		"The NWN central registration module."
+	::= { nwnModules 1 }
+
+
+-- the NWN root subtree
+nwn			OBJECT IDENTIFIER ::= { enterprises 937 }
+
+-- subtree for registrations and modules
+nwnReg		OBJECT IDENTIFIER ::= { nwn 1 }
+nwnModules	OBJECT IDENTIFIER ::= { nwnReg 1 }
+
+-- subtree for company-wide objects and events
+nwnGeneric	OBJECT IDENTIFIER ::= { nwn 2 }
+
+-- subtree for product-specific objects and events
+nwnProducts	OBJECT IDENTIFIER ::= { nwn 3 }
+
+-- subtree for agent capabilities
+nwnCapabilities	OBJECT IDENTIFIER ::= { nwn 4 }
+
+-- subtree for requirement specifications
+nwnReqs 	OBJECT IDENTIFIER ::= { nwn 5 }
+
+-- subtree for experiments
+nwnExperimental	OBJECT IDENTIFIER ::= { nwn 6 }
+
+
+
+--
+--  Products - registration
+--
+
+parrot550	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Parrot 550 Access Point"
+	::= { nwnReg 2 }
+
+swallow550 	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Swallow 550 PC-Card Adapter"
+	::= { nwnReg 3 }
+
+pelican550 	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Pelican 550 Wireless Hub"
+	::= { nwnReg 4 }
+
+wbs1100 	OBJECT-IDENTITY
+	STATUS 			current
+	DESCRIPTION		"The 11 Mbps LAN-to-LAN Wireless Bridge Server"
+	::= { nwnReg 5 }
+
+wbc1100 	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The 11 Mbps LAN-to-LAN Wireless Bridge Client"
+	::= { nwnReg 6 }
+
+parrot1100	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Parrot 1100 Access Point"
+	::= { nwnReg 7 }
+
+swallow1100 	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Swallow 1100 PC-Card Adapter"
+	::= { nwnReg 8 }
+
+pelican1100 	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"The Pelican 1100 Wireless Hub"
+	::= { nwnReg 9 }
+	
+wbsPRISMI		OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"LAN-to-LAN Wireless Bridge Server"
+	::= { nwnReg 10 }
+	
+wbcPRISMI		OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"LAN-to-LAN Wireless Bridge Client"
+	::= { nwnReg 11 }
+	
+wlanAPPRISMI	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"Wireless LAN Access Point (PRISM-I)"
+	::= { nwnReg 12 }
+	
+wlanPCCardPRISMI	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"Wireless LAN PC Card (PRISM-I)"
+	::= { nwnReg 13 }
+
+wlanHubPRISMI	OBJECT-IDENTITY
+	STATUS			current
+	DESCRIPTION		"Wireless LAN Hub (PRISM-I)"
+	::= { nwnReg 14 }
+	
+
+END
+
+
+
+--
+--  Textual Conventions - none at the moment
+--
+
+
+

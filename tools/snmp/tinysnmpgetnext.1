@@ -1,0 +1,100 @@
+.\"
+.\" -*- nroff -*-
+.\"
+.\"  Copyright (c) Abraham vd Merwe <abz@blio.com>
+.\"  All rights reserved.
+.\"
+.\"  Redistribution and use in source and binary forms, with or without
+.\"  modification, are permitted provided that the following conditions
+.\"  are met:
+.\"  1. Redistributions of source code must retain the above copyright
+.\"     notice, this list of conditions and the following disclaimer.
+.\"
+.\"  2. Redistributions in binary form must reproduce the above copyright
+.\"     notice, this list of conditions and the following disclaimer in the
+.\"     documentation and/or other materials provided with the distribution.
+.\"  3. Neither the name of the author nor the names of other contributors
+.\"     may be used to endorse or promote products derived from this software
+.\"     without specific prior written permission.
+.\"
+.\"  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+.\"  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+.\"  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\"  ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\"  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\"  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+.\"  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+.\"  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+.\"  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.\"  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.TH TINYSNMPGETNEXT 1 "August 2002" Unix "User Manuals"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .BR        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+tinysnmpgetnext \- retrieves the next object identifier(s) in the agent MIB.
+.SH SYNOPSIS
+.B tinysnmpgetnext
+.RI [OPTIONS]
+.RI <hostname>
+.RI <community>
+.RI [objectID
+.RI [[objectID] ... ]]
+.SH DESCRIPTION
+.B tinysnmpgetnext
+is one of a set of command-line utilities used to query an agent.
+.SH OPTIONS
+A summary of options is included below.
+.TP
+.B \-p | \-\-port=SERVICE
+The port which the server binds to. You may specify either a service as
+found in /etc/services or a valid port number. By default, snmp/udp is
+ searched for in the /etc/services file and the resulting port number is
+used. Failing that, port 161 is used. If the program was compiled without
+-DGETSERVBYNAME, you may only used port numbers (and the default behaviour
+also differs accordingly).
+.TP
+.B \-t | \-\-timeout=SECONDS
+Timeout in seconds between operations. This setting affects how long
+the manager waits for the agent to respond to queries.
+.TP
+.B \-r | \-\-retries=NUM
+Number of times that the manager will try to resend requests to the agent.
+Any number of retries between 0 and 65535 is allowed.
+.TP
+.B \-h | \-\-help
+Show a help message.
+.TP
+.B <hostname>
+Hostname or ip-address of agent. If the program was compiled without
+-DGETHOSTBYNAME, you may only specify an ip-address.
+.TP
+.B <community>
+The community string which manager must use to connect to the server.
+.TP
+.B <objectID>
+A list of Object Identifiers (OIDs) that should be retrieved from the agent.
+OIDs should be absolute, i.e. no assumptions is made about them and does not
+start with a dot (e.g. 1.3.6.1 is a valid OID, but .1.3.6.1 is not)
+.P
+All of these options can also be found be executing the
+program with the
+.B \-h
+or
+.B \-\-help
+options.
+.SH SEE ALSO
+.BR tinysnmpget (1), tinysnmpwalk (1), tinysnmptable (1)
+.SH AUTHOR
+Written by Abraham vd Merwe <abz@blio.com>
+

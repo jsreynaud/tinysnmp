@@ -1,0 +1,63 @@
+--- /tmp/GdYvJ6nBqN/tinysnmp-0.8.4/agent/odb.c	2004-07-30 19:59:29.000000000 +0300
++++ /tmp/vKVcLAvHZW/tinysnmp-0.8.4+memmove/agent/odb.c	2006-09-19 23:27:33.000000000 +0300
+@@ -80,7 +80,7 @@
+ 
+ static int snmp_copy_value (snmp_value_t *dest,const snmp_value_t *src)
+ {
+-   memcpy (dest,src,sizeof (snmp_value_t));
++   memmove (dest,src,sizeof (snmp_value_t));
+ 
+    if (src->type == BER_OCTET_STRING)
+ 	 {
+@@ -145,7 +145,7 @@
+    odb->parent = odb->sibling = odb->child = NULL;
+ 
+    if (type == VALUE)
+-	 odb->data.value = node->value;
++	 memmove(&(odb->data.value), &(node->value), sizeof(snmp_value_t));
+    else
+ 	 odb->data.node = node->oid[0];
+ 
+--- /tmp/GdYvJ6nBqN/tinysnmp-0.8.4/modules/resources/diskinfo_linux.c	2004-07-17 17:02:24.000000000 +0300
++++ /tmp/vKVcLAvHZW/tinysnmp-0.8.4+memmove/modules/resources/diskinfo_linux.c	2006-09-19 23:40:33.000000000 +0300
+@@ -137,6 +137,7 @@
+    struct statfs fs;
+    struct mntent *entry;
+    struct diskinfo *pt;
++   uint64_t tmp;
+    FILE *fp;
+ 
+    abz_clear_error ();
+@@ -194,8 +195,10 @@
+ 		strcpy (pt->d_dev,entry->mnt_fsname);
+ 		strcpy (pt->d_dir,entry->mnt_dir);
+ 		pt->d_type = type;
+-		pt->d_total = ((uint64_t) fs.f_bsize * (uint64_t) fs.f_blocks) >> 20;
+-		pt->d_free = ((uint64_t) fs.f_bsize * (uint64_t) fs.f_bavail) >> 20;
++		tmp = ((uint64_t) fs.f_bsize * (uint64_t) fs.f_blocks) >> 20;
++		memmove(&(pt->d_total), &tmp, sizeof(uint64_t));
++		tmp = ((uint64_t) fs.f_bsize * (uint64_t) fs.f_bavail) >> 20;
++		memmove(&(pt->d_free), &tmp, sizeof(uint64_t));
+ 
+ 		disk_insert (list,pt);
+ 	 }
+--- /tmp/GdYvJ6nBqN/tinysnmp-0.8.4/modules/resources/main.c	2004-07-31 21:13:01.000000000 +0300
++++ /tmp/vKVcLAvHZW/tinysnmp-0.8.4+memmove/modules/resources/main.c	2006-09-19 23:44:44.000000000 +0300
+@@ -134,13 +134,15 @@
+ static void diskTotal (snmp_value_t *value,const struct diskinfo *disk)
+ {
+    value->type = BER_Gauge32;
+-   value->data.Gauge32 = disk->d_total;
++   /* should this be uint64_t or uint32_t ? */
++   memmove(&value->data.Gauge32, &disk->d_total, sizeof(uint64_t));
+ }
+ 
+ static void diskFree (snmp_value_t *value,const struct diskinfo *disk)
+ {
+    value->type = BER_Gauge32;
+-   value->data.Gauge32 = disk->d_free;
++   /* should this be uint64_t or uint32_t ? */
++   memmove(&value->data.Gauge32, &disk->d_free, sizeof(uint64_t));
+ }
+ 
+ static int storage_update (struct odb **odb)

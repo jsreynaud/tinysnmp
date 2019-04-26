@@ -1,0 +1,298 @@
+FROGFOOT-DVB-MIB
+
+-- -*- mib -*-
+
+DEFINITIONS ::= BEGIN
+
+-- Frogfoot Networks CC DVB Receiver MIB
+
+-- This mib provides a generic interface for DVB Data
+-- Receivers.
+
+IMPORTS
+	MODULE-IDENTITY, OBJECT-TYPE, Counter32, Gauge32,
+	TimeTicks, Integer32, enterprises
+		FROM SNMPv2-SMI
+	TEXTUAL-CONVENTION, DisplayString, PhysAddress,
+	TruthValue
+		FROM SNMPv2-TC
+	MODULE-COMPLIANCE, OBJECT-GROUP
+		FROM SNMPv2-CONF;
+
+dvb 	MODULE-IDENTITY
+	LAST-UPDATED "200407280000Z"
+	ORGANIZATION "Frogfoot Networks"
+	CONTACT-INFO
+		"	Abraham van der Merwe
+
+			Postal: Frogfoot Networks CC
+					P.O. Box 23618
+					Claremont
+					Cape Town
+					7735
+					South Africa
+
+			Phone: +27 82 565 4451
+			Email: abz@frogfoot.net"
+	DESCRIPTION
+		"The MIB module to describe DVB Data receivers."
+	::= { system 3 }
+
+frogfoot		OBJECT IDENTIFIER ::= { enterprises 10002 }
+servers			OBJECT IDENTIFIER ::= { frogfoot 1 }
+system			OBJECT IDENTIFIER ::= { servers 1 }
+
+dvbMIB			OBJECT IDENTIFIER ::= { dvb 31 }
+dvbMIBObjects	OBJECT IDENTIFIER ::= { dvbMIB 1 }
+dvbConformance	OBJECT IDENTIFIER ::= { dvbMIB 2 }
+
+dvbGroups		OBJECT IDENTIFIER ::= { dvbConformance 1 }
+dvbCompliances	OBJECT IDENTIFIER ::= { dvbConformance 2 }
+
+TableIndex ::= TEXTUAL-CONVENTION
+	DISPLAY-HINT	"d"
+	STATUS			current
+	DESCRIPTION
+		"A unique value, greater than zero. It is recommended
+		that values are assigned contiguously starting from 1."
+	SYNTAX			Integer32 (1..2147483647)
+
+--
+-- Interface Table
+--
+
+dvbNumber	OBJECT-TYPE
+	SYNTAX			Integer32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The number of DVB interfaces in the table."
+	::= { dvb 1 }
+
+dvbTable		OBJECT-TYPE
+	SYNTAX			SEQUENCE OF DVBEntry
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"DVB interfaces."
+	::= { dvb 2 }
+
+dvbEntry		OBJECT-TYPE
+	SYNTAX			DVBEntry
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"An entry containing DVB Data Receiver interface information."
+	INDEX { dvbIndex }
+	::= { dvbTable 1 }
+
+DVBEntry ::=
+	SEQUENCE {
+		dvbIndex				TableIndex,
+		dvbDescr				DisplayString,
+		dvbVersion				DisplayString,
+		dvbHWAddr				PhysAddress,
+		dvbStatus				INTEGER,
+		dvbRxPackets			Counter32,
+		dvbRxRate				Gauge32,
+		dvbLNBLock				TruthValue,
+		dvbBitErrorRate			Gauge32,
+		dvbErrorsCorrected		Counter32,
+		dvbErrorsUncorrected	Counter32,
+		dvbSNRatio				Gauge32,
+		dvbLastUpdated			TimeTicks
+	}
+
+dvbIndex		OBJECT-TYPE
+	SYNTAX			TableIndex
+	MAX-ACCESS		not-accessible
+	STATUS			current
+	DESCRIPTION
+		"A unique value, greater than zero, for each DVB interface.
+		It is recommended that values are assigned contiguously
+		starting from 1. The value for each interface must remain
+		constant at least from one re-initialization of the entity's
+		network management system to the next re-initialization."
+	::= { dvbEntry 1 }
+
+dvbDescr		OBJECT-TYPE
+	SYNTAX			DisplayString
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"A textual string containing information about the DVB
+		interface. This string should preferably be the interface
+		name as indicated by ifDescr.0 in the IETF Interfaces MIB."
+	::= { dvbEntry 2 }
+
+dvbVersion		OBJECT-TYPE
+	SYNTAX			DisplayString
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"A textual string containing information about the DVB
+		driver version."
+	::= { dvbEntry 3 }
+
+dvbHWAddr		OBJECT-TYPE
+	SYNTAX			PhysAddress
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The interface's MAC address."
+	::= { dvbEntry 4 }
+
+dvbStatus		OBJECT-TYPE
+	SYNTAX			INTEGER {
+						open(1),		-- device is open
+						close(2),		-- device is closed
+						error(3)		-- failed to open device
+					}
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The desired state of the interface. The open(1) state
+		indicates that no operational packets can be passed."
+	::= { dvbEntry 5 }
+
+dvbRxPackets	OBJECT-TYPE
+	SYNTAX			Counter32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The number of packets received by this interface.
+		Discontinuities in the value of this counter can
+		occur at re-initialization of the management system
+		or when the counter wraps."
+	::= { dvbEntry 6 }
+
+dvbRxRate		OBJECT-TYPE
+	SYNTAX			Gauge32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The download speed of the interface in bits per
+		second."
+	::= { dvbEntry 7 }
+
+dvbLNBLock		OBJECT-TYPE
+	SYNTAX			TruthValue
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The LNB (Low Noise Block) Lock status. This object has
+		a value of false(2) if no usable signal is detected or
+		true(1) if LNB has locked on to a signal."
+	::= { dvbEntry 8 }
+
+dvbBitErrorRate	OBJECT-TYPE
+	SYNTAX			Gauge32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The percentage of bits that have errors relative to the
+		total number of bits received in a transmission. If this
+		object reports a value of `n' then the bit error rate is
+		n*10^-12.
+		
+		For example, a transmission might have a BER of 286102,
+		meaning that, our of 1,000,000,000,000 bits transmitted,
+		286102 bits was in error.
+		
+		The BER is an indication of how often a packet or other
+		data unit has to be retransmitted because of an error."
+	::= { dvbEntry 9 }
+
+dvbErrorsCorrected OBJECT-TYPE
+	SYNTAX			Counter32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The number of errors corrected by the Reed Solomon error
+		decoder."
+	::= { dvbEntry 10 }
+
+dvbErrorsUncorrected OBJECT-TYPE
+	SYNTAX			Counter32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The number of errors which could not be corrected by the
+		Reed Solomon error decoder."
+	::= { dvbEntry 11 }
+
+dvbSNRatio		OBJECT-TYPE
+	SYNTAX			Gauge32
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The Signal to Noise Ratio of the antenna. If this object
+		reports a value of `n' then the SNR is n*10^6 dB.
+		
+		If the SNR falls below 6 dB, the signal is very weak and
+		the satellite dish should probably be recalibrated."
+	::= { dvbEntry 12 }
+
+dvbLastUpdated	OBJECT-TYPE
+	SYNTAX			TimeTicks
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION
+		"The value of sysUpTime at the time when the interface
+		statistics was last obtained by the agent."
+	::= { dvbEntry 13 }
+
+--
+-- Compliance Statements
+--
+
+dvbCompliance	MODULE-COMPLIANCE
+	STATUS current
+	DESCRIPTION
+		"The compliance statement for SNMP entities which have
+		DVB Data Receivers."
+	MODULE
+		MANDATORY-GROUPS { reqGroup }
+		GROUP reqGroup
+		DESCRIPTION
+			"This group is mandatory for those systems which have
+			any type of DVB interface."
+		GROUP optGroup
+		DESCRIPTION
+			"This group contain all the optional values for each
+			DVB interface."
+	::= { dvbCompliances 1 }
+
+reqGroup	OBJECT-GROUP
+	OBJECTS {
+		dvbNumber,
+		dvbDescr,
+		dvbVersion,
+		dvbHWAddr,
+		dvbStatus,
+		dvbRxPackets,
+		dvbRxRate,
+		dvbLNBLock,
+		dvbSNRatio,
+		dvbLastUpdated
+	}
+	STATUS			current
+	DESCRIPTION
+		"A collection of objects providing information specific to
+		DVB Data Receivers."
+	::= { dvbGroups 1 }
+
+optGroup	OBJECT-GROUP
+	OBJECTS {
+		dvbBitErrorRate,
+		dvbErrorsCorrected,
+		dvbErrorsUncorrected
+	}
+	STATUS			current
+	DESCRIPTION
+		"An optional collection of objects providing information
+		specific to DVB Data Receivers. This information may be
+		omitted if not supported by the device or driver."
+	::= { dvbGroups 2 }
+
+END

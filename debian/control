@@ -1,0 +1,124 @@
+Source: tinysnmp
+Section: net
+Priority: optional
+Maintainer: Abraham vd Merwe <abz@debian.org>
+Build-Depends: debhelper (>> 3.0.0), libevent-dev, libdebug0-dev (>= 0.4.2), libber0-dev (>= 0.4.2), libabz0-dev (>= 0.7.2), pentanet-dev
+Standards-Version: 3.6.1
+
+Package: tinysnmp-dev
+Architecture: any
+Section: devel
+Depends: ${shlibs:Depends}, libdebug0-dev (>= 0.4.2), libber0-dev (>= 0.4.2), libabz0-dev (>= 0.7.2)
+Suggests: tinysnmp-manager-dev (= ${Source-Version}), tinysnmp-agent-dev (= ${Source-Version})
+Description: Files needed for developing TinySNMP programs and plugins
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This package contains files needed if you wish to use the tinysnmp
+ libraries in your own programs.
+
+Package: tinysnmp-manager-dev
+Architecture: any
+Section: devel
+Depends: ${shlibs:Depends}, tinysnmp-dev (= ${Source-Version})
+Suggests: tinysnmp-agent-dev (= ${Source-Version}), tinysnmp-tools (= ${Source-Version})
+Description: Libraries and header files for developing TinySNMP programs
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This package contains files needed if you wish to create manager software
+ that use the tinysnmp implementation.
+
+Package: tinysnmp-tools
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}
+Suggests: tinysnmp-agent (= ${Source-Version})
+Description: TinySNMP Utilities
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This package contains implementations of the popular SNMP utilities found
+ in many SNMP implementations. This includes tinysnmpget, tinysnmpgetnext,
+ and tinysnmpwalk.
+
+Package: tinysnmp-agent-dev
+Architecture: all
+Section: devel
+Depends: ${shlibs:Depends}, tinysnmp-dev (= ${Source-Version})
+Suggests: tinysnmp-manager-dev (= ${Source-Version}), tinysnmp-agent (= ${Source-Version}), tinysnmp-tools (= ${Source-Version})
+Description: Libraries and header files for developing TinySNMP plugins
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This package contains files needed if you wish to create agent modules
+ for the tinysnmp agent.
+
+Package: tinysnmp-agent
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}
+Recommends: tinysnmp-module-interfaces (= ${Source-Version}), tinysnmp-module-resources (= ${Source-Version})
+Suggests: tinysnmp-module-ups (= ${Source-Version}), tinysnmp-tools (= ${Source-Version})
+Conflicts: tinysnmp-module-mib2, snmpd
+Replaces: tinysnmp-module-mib2
+Description: A lightweight SNMPv1 implementation
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This package contains the tinysnmp agent daemon.
+
+Package: tinysnmp-module-interfaces
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}, tinysnmp-agent (= ${Source-Version})
+Description: Interfaces MIB module for TinySNMP
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This module is used to describe generic objects for network
+ interface sub-layers as defined in the IETF Interfaces MIB.
+
+Package: tinysnmp-module-resources
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}, tinysnmp-agent (= ${Source-Version})
+Description: Frogfoot Networks Resources MIB plugin for TinySNMP
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This module is used to describe host resources such as memory,
+ storage space, and processor load as defined in the Frogfoot
+ Networks Resources MIB.
+ .
+ The Frogfoot Networks Resources MIB is similar to the IETF Host
+ Resources MIB, but does not have per-process statistics (but it
+ does have overall processor load statistics which is not present
+ in the IETF Host Resources MIB).
+
+Package: tinysnmp-module-ups
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}, apcupsd, tinysnmp-agent (= ${Source-Version})
+Description: UPS MIB module for TinySNMP
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This module is used to describe Uninterruptible Power Supplies as
+ defined in the IETF UPS MIB.
+ .
+ Only APC UPS's are currently supported.
+
+Package: tinysnmp-module-dvb
+Architecture: any
+Section: net
+Depends: ${shlibs:Depends}, tinysnmp-agent (= ${Source-Version})
+Description: DVB Data Receiver MIB module for TinySNMP
+ This is a fast, leightweight implementation of the SNMPv1 protocol
+ as described in RFC 1157.
+ .
+ This module is used to describe DVB Data Receivers.
+ .
+ Only the Pent@NET and Pent@VALUE cards from Pentamedia are
+ currently supported.
+

@@ -1,0 +1,29 @@
+
+wireless
+========
+
+- libiw27 / libiw-dev
+- IEEE 802.11 MIB
+- NWN DOT11EXT MIB
+
+resources
+=========
+
+* processes
+	- number of processes (active, idle, etc?)
+	- list of processes (memory, cpu usage, hierarchy)
+
+* networking
+	- PF_UNIX sockets
+	- PF_INET sockets
+	- connections ??
+
+sensors
+=======
+
+-- sensorPrecision
+-- sensorUpdateRate
+-- alarms
+
+smidump -f tree --tree-full-root FROGFOOT-RESOURCES-MIB.txt
+

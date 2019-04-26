@@ -1,0 +1,132 @@
+.\"
+.\" -*- nroff -*-
+.\"
+.\"  Copyright (c) Abraham vd Merwe <abz@blio.com>
+.\"  All rights reserved.
+.\"
+.\"  Redistribution and use in source and binary forms, with or without
+.\"  modification, are permitted provided that the following conditions
+.\"  are met:
+.\"  1. Redistributions of source code must retain the above copyright
+.\"     notice, this list of conditions and the following disclaimer.
+.\"
+.\"  2. Redistributions in binary form must reproduce the above copyright
+.\"     notice, this list of conditions and the following disclaimer in the
+.\"     documentation and/or other materials provided with the distribution.
+.\"  3. Neither the name of the author nor the names of other contributors
+.\"     may be used to endorse or promote products derived from this software
+.\"     without specific prior written permission.
+.\"
+.\"  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+.\"  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+.\"  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\"  ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\"  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\"  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+.\"  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+.\"  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+.\"  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.\"  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.TH TINYSNMP-MODULES 3 "July 2004" Unix "Library calls"
+.SH NAME
+TinySNMPd module API
+.SH SYNOPSIS
+.B #include <tinysnmp/agent/module.h>
+.br
+.B #include <tinysnmp/agent/odb.h>
+.PP
+.BI "static int foo_parse (struct tokens *" tokens ")
+.br
+.BI {
+.RS 4
+.BI ...
+.RE
+.BI }
+.PP
+.BI "static int foo_open (void)
+.br
+.BI {
+.RS 4
+.BI ...
+.RE
+.BI }
+.PP
+.BI "static int foo_update (struct odb **" odb ")
+.br
+.BI {
+.RS 4
+.BI ...
+.RE
+.BI }
+.PP
+.BI "static int foo_close (void)
+.br
+.BI {
+.RS 4
+.BI ...
+.RE
+.BI }
+.PP
+.BI "static const uint32_t foo_oid[] = { ... };
+.PP
+.BI "static const uint32_t bar_oid[] = { ... };
+.PP
+.BI "struct module module = {
+.br
+.RS 4
+.BI "." name "	= ""foo"",
+.br
+.BI "." descr "	= ""The MIB module for Foo entities"",
+.br
+.BI "." mod_oid "	= foo_oid,
+.br
+.BI "." con_oid "	= bar_oid,
+.br
+.BI "." parse "	= foo_parse,
+.br
+.BI "." open "	= foo_open,
+.br
+.BI "." close "	= foo_close,
+.RE
+.BI };
+.SH DESCRIPTION
+Each TinySNMPd modules must define a module structure as above. You have to
+specify at least the name, description, the module and conformance object
+identifiers, and an update callback function. All the other callback
+functions are optional.
+.PP
+The \fB_init()\fP and \fB_fini()\fP functions should not be used.
+.PP
+The module oid (\fImod_oid\fP) must be the base ObjectID and all ObjectID's
+exported by the module must be below that base ObjectID. The conformance oid
+(\fIcon_oid\fP) must be the base ObjectID of all the conformance statements
+of the mib.
+.PP
+The \fIopen\fP function is called once when the agent is started. This
+function should be used to allocate and initialize resources for use by the
+other functions.
+.PP
+The \fIparse\fP function is called if/when the module section is parsed.
+This happens after the open function was called.
+.PP
+The \fIclose\fP function is called once when the agent is stopped. This
+function should free all resources allocated by any of the other functions.
+.PP
+The \fIupdate\fP function is called when the agent is trying to find any
+ObjectIDs exported by this module. The agent removes all ObjectID's exported
+by the module before calling this function. If the function fails, it will
+also remove any ObjectID's afterwards. There is therefore no need to remove
+any ObjectID's inside the update function.
+.SH RETURN VALUES
+The open and update callbacks should return 0 if successful, -1 if
+some error occurred. The parse callback should return 1 a statement
+was parsed successfully, 0 if an unknown statement is encountered, and -1 if
+some error occurred.
+.PP
+All errors should be saved using \fBabz_set_error()\fP.
+.SH SEE ALSO
+tinysnmpd(8), tinysnmpd.conf(5), dlopen(3)
+.SH AUTHOR
+Written by Abraham vd Merwe <abz@blio.com>
+

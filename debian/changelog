@@ -1,0 +1,234 @@
+tinysnmp (0.8.5) unstable; urgency=low
+
+  * Added dependancy on latest libabz0 (Closes: #385881, #390407)
+  * Use adduser instead of useradd/groupadd (Closes: #416610, #381640)
+  * Use bash in Makefile (Closes: #376361)
+  * Added tinysnmp-agent conflict with snmpd (Closes: #340757)
+  * Exit when make sub processes fail. Thanks to
+    Niko Tyni <ntyni@iki.fi> for patch (Closes: #388395)
+  * Use `make distclean' in rules file (Closes: #388392)
+  * Fixed alignment problems on Sparc. Thanks to
+    Niko Tyni <ntyni@iki.fi> for debugging and patch (Closes: #388256)
+  * Fixed gcc 4.x signedness warnings.
+  * Parse 64-bit values in /proc/net/dev (Closes: #388391)
+  * Removed -O0 workaround which shouldn't be necessary anymore.
+  * Disable epoll.
+
+ -- Abraham vd Merwe <abz@debian.org>  Fri, 11 May 2007 10:51:04 +0200
+
+tinysnmp (0.8.4) unstable; urgency=low
+
+  * Compile with -O0 instead of -Os on sparc64 (Closes: #282260)
+  * Link against latest libevent1
+
+ -- Abraham vd Merwe <abz@debian.org>  Wed,  9 Feb 2005 17:50:15 +0200
+
+tinysnmp (0.8.3) unstable; urgency=low
+
+  * Fixed command-line parser bug in tinysnmp{get,set,walk}.
+
+ -- Abraham vd Merwe <abz@debian.org>  Thu,  6 Oct 2004 18:18:52 +0200
+
+tinysnmp (0.8.2) unstable; urgency=low
+
+  * Fixed timing bug in synchronous manager routines
+  * Added support for 2.6.x in resources module
+  * Updated dependencies
+
+ -- Abraham vd Merwe <abz@debian.org>  Tue,  7 Sep 2004 10:34:12 +0200
+
+tinysnmp (0.8.1) unstable; urgency=low
+
+  * Added Sensors MIB.
+  * Added support for DVB Receiver cards in Linux.
+  * New module interface. OIDs now removed automatically prior
+    to calling update functions, sysORID's now point to conformance
+    information, not mib objects.
+  * New asynchronous manager library.
+  * Use syslog instead of own log file.
+
+ -- Abraham vd Merwe <abz@debian.org>  Fri,  6 Aug 2004 12:51:27 +0200
+
+tinysnmp (0.7.1) unstable; urgency=low
+
+  * Fixed bug in module parsing.
+  * Yet another module interface change.
+  * Added support for RFC-1628 UPS mib (using apcupsd).
+  * Now have fully SNMPv2 compliant mib support.
+  * Include all necessary mibs with agent/modules.
+
+ -- Abraham vd Merwe <abz@debian.org>  Thu, 22 Jul 2004 01:09:55 +0200
+
+tinysnmp (0.6.3) unstable; urgency=low
+
+  * Updated Debian policy version
+  * Implemented storage, load sections of resources mib.
+  * Removed traffic mib.
+  * Updated resources mib.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat, 17 Jul 2004 18:17:51 +0200
+
+tinysnmp (0.6.2) unstable; urgency=low
+
+  * Minor bugfix in makeoid output.
+  * Link to new libevent library.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat, 13 Dec 2003 12:02:48 +0200
+
+tinysnmp (0.6.1) unstable; urgency=low
+
+  * Complete rewrite of agent. The agent now uses libevent and should
+    be much faster.
+  * New Cisco-like configuration file format and all the modules share the
+    same configuration file as the agent.
+  * New plugin library API.
+  * Removed traffic modules and daemons. MIB has to be redesigned and
+    reimplemented.
+  * Lots of compatibility fixes/updates (Closes: #218352, #221414, #223221)
+  * Better documentation.
+  * Pipe stderr to /dev/null in logrotate script (Closes: #221857)
+
+ -- Abraham vd Merwe <abz@debian.org>  Thu, 11 Dec 2003 23:39:12 +0200
+
+tinysnmp (0.5.6) unstable; urgency=low
+
+  * Updated dependencies (Closes: #214560)
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat,  7 Oct 2003 19:28:21 +0200
+
+tinysnmp (0.5.5) unstable; urgency=low
+
+  * Added empty strings in mib2.conf (Closes: #211509)
+  * Updated resources mib.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat,  4 Oct 2003 15:26:05 +0200
+
+tinysnmp (0.5.4) unstable; urgency=low
+
+  * Fixed buffer overflow in snmp_open() (Thanks Fredrick).
+
+ -- Abraham vd Merwe <abz@debian.org>  Fri,  3 Oct 2003 15:27:34 +0200
+
+tinysnmp (0.5.3) unstable; urgency=low
+
+  * Removed defaults from mib2.conf (Closes: #211509)
+  * Implemented sysUpTime in mib2 module (Closes: #211507)
+  * Replaced network_t with 'struct network'
+
+ -- Abraham vd Merwe <abz@debian.org>  Thu,  2 Oct 2003 17:23:25 +0200
+
+tinysnmp (0.5.2) unstable; urgency=low
+
+  * Changed tinysnmpwalk to terminate walk at end of
+    subtree (Closes: #197697)
+
+ -- Abraham vd Merwe <abz@debian.org>  Sun, 22 Jun 2003 17:53:54 +0200
+
+tinysnmp (0.5.1) unstable; urgency=low
+
+  * Compile static libraries with -fPIC (Closes: #188922)
+  * Minor bugfix in snmp manager library.
+  * Added max-rows option to snmp_get_table().
+  * snmp_table_t now contains the ObjectID's of each row.
+  * Fixed Frogfoot MIBs (thanks to smilint).
+
+ -- Abraham vd Merwe <abz@debian.org>  Mon, 16 Jun 2003 20:27:10 +0200
+
+tinysnmp (0.4.4) unstable; urgency=low
+
+  * Fixed illegal free in mib-2 module.
+  * Only allow localhost to connect to server by default (Closes: #179762)
+  * Made package debian policy 3.5.8 compliant.
+
+ -- Abraham vd Merwe <abz@debian.org>  Tue,  4 Feb 2003 14:15:57 +0200
+
+tinysnmp (0.4.3) unstable; urgency=low
+
+  * Added libabz0-dev to build dependencies (Closes: #172268, #172270)
+
+ -- Abraham vd Merwe <abz@debian.org>  Mon,  9 Dec 2002 01:22:04 +0200
+
+tinysnmp (0.4.2) unstable; urgency=low
+
+  * Moved all generic stuff into libabz.
+  * Don't build shlibs with non-PIC code (Closes: #152455)
+
+ -- Abraham vd Merwe <abz@debian.org>  Sun,  8 Dec 2002 00:48:54 +0200
+
+tinysnmp (0.4.1) unstable; urgency=low
+
+  * Changed manager interface. I'm still not happy with the new
+    interface, but it's definitely better than the old one.
+  * Added snmp_get_table() for querying tables of entries.
+  * Made tinysnmp{!get} utilities symlinks to tinysnmpget (which
+    is what it should've been in the first place).
+  * Some minor bugfixes.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat, 10 Aug 2002 22:27:01 +0200
+
+tinysnmp (0.3.2) unstable; urgency=low
+
+  * Added FAQ to agent package.
+  * Fixed some typos in previous changelog entry.
+
+ -- Abraham vd Merwe <abz@debian.org>  Fri,  9 Aug 2002 11:17:51 +0200
+
+tinysnmp (0.3.1) unstable; urgency=low
+
+  * Yet another module interface change. This time I added support
+    for configuration files for each module.
+  * Allow sysContact and sysLocation to be set in the configuration
+    file of the mib-2 module.
+  * Moved all the generic code to a lib directory which compiles as
+    a static library (avoids code duplication).
+  * Started implementing frogfoot MIBs. This is definitely a work
+    in progress. So far implemented modules include the traffic
+    monitoring module and part of the resources module.
+  * Added Linux 2.2.x compatibility flags - it seems there are people
+    who actually still use 2.2.x kernels.
+  * Ported tinysnmp to FreeBSD (mib-2 module currently only works
+    in Linux).
+  * Compile object files with -fPIC as well when compiling shared
+    libraries (Closes: #152455).
+  * Fixed init.d stop bug.
+
+ -- Abraham vd Merwe <abz@debian.org>  Thu,  8 Aug 2002 23:26:11 +0200
+
+tinysnmp (0.2.1) unstable; urgency=low
+
+  * Finished agent. It is now somewhat functional/usable, but there's
+    still quite a bit of polishing to do.
+  * Implemented IpAddress type.
+  * Changed API to allow 8-bit OCTET STRING strings. Now why didn't I
+    do that in the first place :P
+  * Implemented mib-2 system module partially.
+  * Completely rewrote Makefiles. Now uses central rule system and
+    configuration files.
+  * Wrote helper utility to convert ObjectID strings to numeric ones.
+  * New module interface for agent.
+  * Packaged mib-2 module.
+  * Changed copyright notices to reflect my new preferred email address.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat, 22 Jun 2002 17:36:10 +0200
+
+tinysnmp (0.1.1) unstable; urgency=low
+
+  * Finished agent (compiles, but not functional yet).
+  * New module interface for agent.
+  * Fixed naming bug in tinysnmp utilities and ported to new debug library.
+  * Implemented mib-2 interfaces module.
+  * Moved headers to include/tinysnmp
+  * Removed shared library dependencies from control file (they're
+    generated automatically be debhelper scripts).
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat,  8 Jun 2002 20:56:47 +0200
+
+tinysnmp (0.0.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Abraham vd Merwe <abz@debian.org>  Sat,  6 Apr 2002 21:27:19 +0200
+
+Local variables:
+mode: debian-changelog
+End:
